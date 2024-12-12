@@ -8,4 +8,10 @@ public class InputView {
         InputValidator.validateFeature(feature);
         return feature;
     }
+
+    public static String inputCourseLevelMission() {
+        String courseLevelMission = Console.readLine();
+        InputValidator.validateCourseLevelMission(courseLevelMission);
+        return courseLevelMission;
+    }
 }
