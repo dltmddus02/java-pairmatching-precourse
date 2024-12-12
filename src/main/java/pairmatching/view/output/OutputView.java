@@ -3,6 +3,7 @@ package pairmatching.view.output;
 import static pairmatching.view.output.OutputMessage.FEATURE_TYPE;
 import static pairmatching.view.output.OutputMessage.INPUT_COURSE_LEVEL_MISSION;
 import static pairmatching.view.output.OutputMessage.INPUT_FEATURE;
+import static pairmatching.view.output.OutputMessage.INPUT_MATCHING_RETRY;
 import static pairmatching.view.output.OutputMessage.MATCHING_RESULT;
 import static pairmatching.view.output.OutputMessage.PAIR;
 import static pairmatching.view.output.OutputMessage.TRIPLE;
@@ -65,5 +66,9 @@ public class OutputView {
 
         CrewRepository.deleteCrew(mark);
         CrewRepository.addCrew(crew2);
+    }
+
+    public static void printMatchingRetry() {
+        System.out.println(INPUT_MATCHING_RETRY.getMessage());
     }
 }
