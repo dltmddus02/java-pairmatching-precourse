@@ -1,5 +1,6 @@
 package pairmatching.view.input;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 import pairmatching.view.input.exception.InputErrorMessage;
 import pairmatching.view.input.exception.InputException;
@@ -14,28 +15,23 @@ public class InputValidator {
         }
     }
 
+    public static void validateCourseLevelMission(String input) {
+        validateNotNullOrEmpty(input);
+        validateFormat(input);
+    }
+
     public static void validateNotNullOrEmpty(String input) {
         if (input == null || input.isBlank()) {
             throw new InputException(InputErrorMessage.INVALID_INPUT);
         }
     }
 
-    // 양수만 입력 가능한 경우
-    public static void validatePositiveInteger(String input) {
-        try {
-            Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            throw new InputException(InputErrorMessage.INTEGER_REQUIRED);
-        }
-        if (Integer.parseInt(input) < 0) {
-            throw new InputException(InputErrorMessage.POSITIVE_NUMBER_REQUIRED);
-        }
-    }
-
-    // 패턴 이용해야 할 때
     public static void validateFormat(String input) {
-        if (!isCorrectFormat(input)) {
-            throw new InputException(InputErrorMessage.INVALID_INPUT);
+        if (!input.contains(COMMA)) {
+            throw new InputException(InputErrorMessage.INCORRECT_INPUT_FORMAT);
+        }
+        if (Arrays.stream(input.split(COMMA)).count() != 3) {
+            throw new InputException(InputErrorMessage.INCORRECT_INPUT_FORMAT);
         }
     }
 
@@ -43,7 +39,7 @@ public class InputValidator {
         String characterPattern = "[가-힣]+";
         String numberPattern = "[0-9]+";
 
-        String singlePattern = String.format("\\[(%s),(%s)]", characterPattern, numberPattern);
+        String singlePattern = String.format("\\[(%s),(%s),(%s)]", characterPattern, numberPattern);
         String repeatPattern = String.format("%s(;%s)*", singlePattern, singlePattern);
 
         Pattern correctPattern = Pattern.compile("^" + repeatPattern + "$");
