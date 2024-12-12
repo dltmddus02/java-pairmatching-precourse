@@ -8,6 +8,10 @@ import static pairmatching.view.output.OutputMessage.PAIR;
 import static pairmatching.view.output.OutputMessage.TRIPLE;
 
 import java.util.List;
+import pairmatching.domain.Crew;
+import pairmatching.domain.CrewRepository;
+import pairmatching.view.input.exception.InputErrorMessage;
+import pairmatching.view.input.exception.InputException;
 
 public class OutputView {
     public static void printFeature() {
@@ -19,20 +23,47 @@ public class OutputView {
         System.out.println(INPUT_COURSE_LEVEL_MISSION.getMessage());
     }
 
-    public static void printMatchingResult(List<String> shuffledCrew) {
+    public static void printMatchingResult(List<String> shuffledCrew, String level) {
         System.out.println(MATCHING_RESULT.getMessage());
         if (shuffledCrew.size() % 2 == 0) {
-            for (int idx = 0; idx < shuffledCrew.size() / 2; idx++) {
+            for (int idx = 0; idx < shuffledCrew.size() / 2; idx += 2) {
+                validateMatchedCrew(shuffledCrew.get(idx), shuffledCrew.get(idx + 1), level);
                 System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
             }
             return;
         }
-        for (int idx = 0; idx < shuffledCrew.size() / 2 - 1; idx++) {
+        for (int idx = 0; idx < shuffledCrew.size() / 2 - 1; idx += 2) {
+            validateMatchedCrew(shuffledCrew.get(idx), shuffledCrew.get(idx + 1), level);
             System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
         }
+        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 1), shuffledCrew.get(shuffledCrew.size() - 2),
+                level);
+        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 2), shuffledCrew.get(shuffledCrew.size() - 3),
+                level);
+        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 3), shuffledCrew.get(shuffledCrew.size() - 1),
+                level);
         System.out.printf(TRIPLE.getMessage(), shuffledCrew.get(shuffledCrew.size() - 3),
                 shuffledCrew.get(shuffledCrew.size() - 2),
                 shuffledCrew.get(shuffledCrew.size() - 1));
 
+    }
+
+    private static void validateMatchedCrew(String pobi, String mark, String level) {
+        Crew crew1 = CrewRepository.findCrewByName(pobi);
+        Crew crew2 = CrewRepository.findCrewByName(mark);
+
+//        delete하고 다시 add
+        if (crew1.isAlreadyMatchedWith(crew2, level)) {
+            throw new InputException(InputErrorMessage.ALREADY_PAIR);
+        }
+
+        crew1.addMatchedCrew(mark, level);
+        crew2.addMatchedCrew(pobi, level);
+
+        CrewRepository.deleteCrew(pobi);
+        CrewRepository.addCrew(crew1);
+
+        CrewRepository.deleteCrew(mark);
+        CrewRepository.addCrew(crew2);
     }
 }
