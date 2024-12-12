@@ -1,5 +1,6 @@
 package pairmatching.view.output;
 
+import static pairmatching.view.output.OutputMessage.COURSE_LEVEL_MISSION;
 import static pairmatching.view.output.OutputMessage.FEATURE_TYPE;
 import static pairmatching.view.output.OutputMessage.INPUT_COURSE_LEVEL_MISSION;
 import static pairmatching.view.output.OutputMessage.INPUT_FEATURE;
@@ -21,28 +22,24 @@ public class OutputView {
     }
 
     public static void printCourseLevelMission() {
+        System.out.println(COURSE_LEVEL_MISSION.getMessage());
+    }
+
+    public static void printEnterCourseLevelMission() {
         System.out.println(INPUT_COURSE_LEVEL_MISSION.getMessage());
     }
 
-    public static void printMatchingResult(List<String> shuffledCrew, String level) {
+    public static void printMatchingResult(List<String> shuffledCrew) {
         System.out.println(MATCHING_RESULT.getMessage());
         if (shuffledCrew.size() % 2 == 0) {
             for (int idx = 0; idx < shuffledCrew.size() / 2; idx += 2) {
-                validateMatchedCrew(shuffledCrew.get(idx), shuffledCrew.get(idx + 1), level);
                 System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
             }
             return;
         }
         for (int idx = 0; idx < shuffledCrew.size() / 2 - 1; idx += 2) {
-            validateMatchedCrew(shuffledCrew.get(idx), shuffledCrew.get(idx + 1), level);
             System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
         }
-        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 1), shuffledCrew.get(shuffledCrew.size() - 2),
-                level);
-        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 2), shuffledCrew.get(shuffledCrew.size() - 3),
-                level);
-        validateMatchedCrew(shuffledCrew.get(shuffledCrew.size() - 3), shuffledCrew.get(shuffledCrew.size() - 1),
-                level);
         System.out.printf(TRIPLE.getMessage(), shuffledCrew.get(shuffledCrew.size() - 3),
                 shuffledCrew.get(shuffledCrew.size() - 2),
                 shuffledCrew.get(shuffledCrew.size() - 1));

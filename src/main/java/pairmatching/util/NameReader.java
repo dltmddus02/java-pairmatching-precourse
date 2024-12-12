@@ -3,6 +3,7 @@ package pairmatching.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import pairmatching.domain.Crew;
 import pairmatching.domain.CrewRepository;
 
 public class NameReader {
@@ -36,6 +37,8 @@ public class NameReader {
     }
 
     private static void processEachProductLine(String line, String type) {
+        Crew crew = new Crew(line);
+        CrewRepository.addCrew(crew);
         if (type.equals("backend")) {
             CrewRepository.addBackEndCrew(line);
             return;

@@ -28,6 +28,10 @@ public class LevelMissions {
         return this.mission.equals(mission);
     }
 
+    public List<String> getMatchingResult() {
+        return matchingResult;
+    }
+
     public void setMatchingResult(List<String> matchingResult) {
         this.matchingResult = matchingResult;
     }

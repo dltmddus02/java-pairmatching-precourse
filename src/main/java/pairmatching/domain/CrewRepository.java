@@ -33,6 +33,10 @@ public class CrewRepository {
         return crews.removeIf(crew -> Objects.equals(crew.getName(), name));
     }
 
+    public static void deleteAll() {
+        crews.clear();
+    }
+
     public static Crew findCrewByName(String name) {
         for (Crew crew : crews()) {
             if (crew.isExistName(name)) {

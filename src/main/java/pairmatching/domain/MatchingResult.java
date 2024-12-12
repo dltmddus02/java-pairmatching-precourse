@@ -21,4 +21,8 @@ public class MatchingResult {
         }
         return null;
     }
+
+    public void deleteAll() {
+
+    }
 }
