@@ -46,4 +46,10 @@ public class InputValidator {
 
         return correctPattern.matcher(input).find();
     }
+
+    public static void validateMatchingRetry(String input) {
+        if (!input.equals("네") && !input.equals("아니오")) {
+            throw new InputException(InputErrorMessage.INCORRECT_INPUT_FORMAT);
+        }
+    }
 }
