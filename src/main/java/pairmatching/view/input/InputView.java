@@ -14,4 +14,12 @@ public class InputView {
         InputValidator.validateCourseLevelMission(courseLevelMission);
         return courseLevelMission;
     }
+
+    public static String inputMatchingRetry() {
+        String matchingRetry = Console.readLine();
+        InputValidator.validateMatchingRetry(matchingRetry);
+        return matchingRetry;
+    }
+
+
 }
