@@ -9,8 +9,8 @@ import java.util.Objects;
 public class CrewRepository {
     private static final List<Crew> crews = new ArrayList<>();
 
-    private static List<String> backEndCrew = new ArrayList<>();
-    private static List<String> frontEndCrew = new ArrayList<>();
+    private static final List<String> backEndCrew = new ArrayList<>();
+    private static final List<String> frontEndCrew = new ArrayList<>();
 
     public static List<Crew> crews() {
         return Collections.unmodifiableList(crews);
@@ -29,8 +29,8 @@ public class CrewRepository {
         crews.add(crew);
     }
 
-    public static boolean deleteCrew(String name) {
-        return crews.removeIf(crew -> Objects.equals(crew.getName(), name));
+    public static void deleteCrew(String name) {
+        crews.removeIf(crew -> Objects.equals(crew.getName(), name));
     }
 
     public static void deleteAll() {
@@ -38,13 +38,10 @@ public class CrewRepository {
     }
 
     public static Crew findCrewByName(String name) {
-        for (Crew crew : crews()) {
-            if (crew.isExistName(name)) {
-//                matchedCrew에 매칭됐던 애인지 보기
-                return crew;
-            }
-        }
-        return null;
+        return crews().stream()
+                .filter(crew -> crew.isExistName(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public static void addBackEndCrew(String c) {
