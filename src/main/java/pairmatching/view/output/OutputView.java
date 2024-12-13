@@ -32,12 +32,12 @@ public class OutputView {
     public static void printMatchingResult(List<String> shuffledCrew) {
         System.out.println(MATCHING_RESULT.getMessage());
         if (shuffledCrew.size() % 2 == 0) {
-            for (int idx = 0; idx < shuffledCrew.size() / 2; idx += 2) {
+            for (int idx = 0; idx < shuffledCrew.size(); idx += 2) {
                 System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
             }
             return;
         }
-        for (int idx = 0; idx < shuffledCrew.size() / 2 - 1; idx += 2) {
+        for (int idx = 0; idx < shuffledCrew.size()-3; idx += 2) {
             System.out.printf(PAIR.getMessage(), shuffledCrew.get(idx), shuffledCrew.get(idx + 1));
         }
         System.out.printf(TRIPLE.getMessage(), shuffledCrew.get(shuffledCrew.size() - 3),
