@@ -1,6 +1,8 @@
 package pairmatching.domain;
 
 import java.util.List;
+import pairmatching.view.input.exception.InputErrorMessage;
+import pairmatching.view.input.exception.InputException;
 
 public class MatchingResult {
     private final static String COMMA = ",";
@@ -26,5 +28,11 @@ public class MatchingResult {
     }
 
     public void deleteAll() {
+    }
+
+    public void validate(String courseLevelMission) throws InputException {
+        if (findBy(courseLevelMission) == null) {
+            throw new InputException(InputErrorMessage.INVALID_INPUT);
+        }
     }
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import pairmatching.domain.Crew;
 import pairmatching.domain.CrewRepository;
-import pairmatching.domain.LevelMission;
 import pairmatching.domain.LevelMissions;
 import pairmatching.domain.MatchingResult;
 import pairmatching.util.NameReader;
@@ -15,18 +14,16 @@ import pairmatching.view.input.exception.InputException;
 import pairmatching.view.output.OutputView;
 
 public class PairmatchingController {
-    //    private LevelMissions levelMissions;
     private MatchingResult matchingResult;
     private final static String COMMA = ",";
 
     public PairmatchingController() {
+        matchingResult = setupMissionInfo();
     }
 
     public void run() {
         NameReader.storeBackendCrew();
         NameReader.storeFrontendCrew();
-
-        setupMissionInfo();
 
         while (true) {
             try {
@@ -36,6 +33,7 @@ public class PairmatchingController {
                     OutputView.printCourseLevelMission();
                     while (true) {
                         String courseLevelMission = input();
+
                         boolean flag = pairMatchingStart(courseLevelMission);
                         if (flag) {
                             break;
@@ -57,7 +55,7 @@ public class PairmatchingController {
         }
     }
 
-    private void setupMissionInfo() {
+    private MatchingResult setupMissionInfo() {
         LevelMissions back1 = new LevelMissions("백엔드", "레벨1", "자동차경주");
         LevelMissions back2 = new LevelMissions("백엔드", "레벨1", "로또");
         LevelMissions back3 = new LevelMissions("백엔드", "레벨1", "숫자야구게임");
@@ -79,7 +77,7 @@ public class PairmatchingController {
         List<LevelMissions> levelMissions = List.of(back1, back2, back3, back4, back5, back6, back7, back8, front1,
                 front2, front3, front4, front5, front6, front7, front8);
 
-        matchingResult = new MatchingResult(levelMissions);
+        return new MatchingResult(levelMissions);
     }
 
     private String prepareFeature() {
@@ -93,22 +91,9 @@ public class PairmatchingController {
         return retryOnInvalidInput(() -> {
             OutputView.printEnterCourseLevelMission();
             String courseLevelMission = InputView.inputCourseLevelMission();
-            validate(courseLevelMission);
+            matchingResult.validate(courseLevelMission);
             return courseLevelMission;
         });
-    }
-
-    private void validate(String courseLevelMission) {
-        String course = courseLevelMission.split(COMMA)[0].trim();
-        String level = courseLevelMission.split(COMMA)[1].trim();
-        String mission = courseLevelMission.split(COMMA)[2].trim();
-
-        if (!course.equals("백엔드") && !course.equals("프론트엔드")) {
-            throw new InputException(InputErrorMessage.INVALID_INPUT);
-        }
-        if (!LevelMission.isExistentMission(level, mission)) {
-            throw new InputException(InputErrorMessage.INVALID_INPUT);
-        }
     }
 
     private boolean pairMatchingStart(String courseLevelMission) {
@@ -116,13 +101,12 @@ public class PairmatchingController {
         String level = courseLevelMission.split(COMMA)[1].trim();
         String mission = courseLevelMission.split(COMMA)[2].trim();
 
-        LevelMissions current = MatchingResult.findBy(course, level, mission);
+        LevelMissions current = matchingResult.findBy(courseLevelMission);
 
         if (current.matchingResultAlreadyExist()) {
             OutputView.printMatchingRetry();
             String continueGame = InputView.inputMatchingRetry();
             if (continueGame.equals("아니오")) {
-//                OutputView.printMatchingResult(current.getMatchingResult());
                 return false;
             }
         }
@@ -163,9 +147,14 @@ public class PairmatchingController {
 
     private static void validateMatchedCrew(String pobi, String mark, String level) {
         Crew crew1 = CrewRepository.findCrewByName(pobi);
+        if (crew1 == null) {
+            crew1 = new Crew(pobi);
+        }
         Crew crew2 = CrewRepository.findCrewByName(mark);
+        if (crew2 == null) {
+            crew2 = new Crew(mark);
+        }
 
-//        delete하고 다시 add
         if (crew1.isAlreadyMatchedWith(crew2, level)) {
             throw new InputException(InputErrorMessage.ALREADY_PAIR);
         }
@@ -181,18 +170,12 @@ public class PairmatchingController {
     }
 
     private void pairInquiry(String courseLevelMission) {
-        String course = courseLevelMission.split(COMMA)[0].trim();
-        String level = courseLevelMission.split(COMMA)[1].trim();
-        String mission = courseLevelMission.split(COMMA)[2].trim();
-
-        LevelMissions l = MatchingResult.findBy(course, level, mission);
-
+        LevelMissions l = matchingResult.findBy(courseLevelMission);
         OutputView.printMatchingResult(l.getMatchingResult());
-
     }
 
     private void resetMatchingResult() {
-        setupMissionInfo();
+        matchingResult = setupMissionInfo();
         CrewRepository.deleteAll();
     }
 
