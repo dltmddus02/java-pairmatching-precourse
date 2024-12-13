@@ -3,6 +3,7 @@ package pairmatching.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import pairmatching.domain.Course;
 import pairmatching.domain.Crew;
 import pairmatching.domain.CrewRepository;
 
@@ -13,7 +14,7 @@ public class NameReader {
 
     public static void storeBackendCrew() {
         try (BufferedReader br = new BufferedReader(new FileReader(BACKEND_FILE_PATH))) {
-            readProductLines(br, "backend");
+            readProductLines(br, Course.BACKEND.getName());
         } catch (IOException e) {
             System.err.println(FILE_LOAD_ERROR + ": " + e.getMessage());
         }
@@ -21,7 +22,7 @@ public class NameReader {
 
     public static void storeFrontendCrew() {
         try (BufferedReader br = new BufferedReader(new FileReader(FRONTEND_FILE_PATH))) {
-            readProductLines(br, "frontend");
+            readProductLines(br, Course.FRONTEND.getName());
         } catch (IOException e) {
             System.err.println(FILE_LOAD_ERROR + ": " + e.getMessage());
         }
@@ -29,7 +30,6 @@ public class NameReader {
 
 
     private static void readProductLines(BufferedReader br, String type) throws IOException {
-        br.readLine();
         String line;
         while ((line = br.readLine()) != null) {
             processEachProductLine(line, type);
@@ -39,7 +39,7 @@ public class NameReader {
     private static void processEachProductLine(String line, String type) {
         Crew crew = new Crew(line);
         CrewRepository.addCrew(crew);
-        if (type.equals("backend")) {
+        if (type.equals(Course.BACKEND.getName())) {
             CrewRepository.addBackEndCrew(line);
             return;
         }
