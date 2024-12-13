@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LevelMissions {
+    private final static String COMMA = ",";
     private final String course;
     private final String level;
     private final String mission;
@@ -39,4 +40,6 @@ public class LevelMissions {
     public boolean matchingResultAlreadyExist() {
         return !this.matchingResult.isEmpty();
     }
+
+
 }
